@@ -1,5 +1,9 @@
 version: '3.8'
 
+# Временная конфигурация БЕЗ SSL
+# Используется пока DNS не настроен
+# Использование: docker-compose -f docker-compose.nossl.yml up -d --build
+
 services:
   # Backend сервис (FastAPI)
   backend:
@@ -16,10 +20,7 @@ services:
       - API_PORT=8000
       - DEBUG=False
     volumes:
-      # Volume для сохранения базы данных
       - backend-data:/app/data
-      # Для разработки можно раскомментировать для hot-reload
-      # - ./backend:/app
     networks:
       - fitness-network
     healthcheck:
@@ -29,7 +30,7 @@ services:
       retries: 3
       start_period: 40s
 
-  # Frontend сервис (React + Nginx)
+  # Frontend сервис (React + Nginx) - БЕЗ SSL
   frontend:
     build:
       context: ./fitness-client
@@ -40,13 +41,11 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-      - "443:443"
     depends_on:
       - backend
     volumes:
-      # SSL сертификаты
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+      # Используем упрощенную конфигурацию nginx без SSL
+      - ./fitness-client/nginx-nossl.conf:/etc/nginx/conf.d/default.conf
     networks:
       - fitness-network
     healthcheck:
@@ -55,15 +54,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  # Certbot для автоматического обновления SSL сертификатов
-  certbot:
-    image: certbot/certbot
-    container_name: fitness-certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 networks:
   fitness-network:
