@@ -1,0 +1,56 @@
+version: '3.8'
+
+# Docker Compose для локальной разработки с hot-reload
+
+services:
+  # Backend сервис (FastAPI) с hot-reload
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fitness-backend-dev
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./data/workout_app.db
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - DEBUG=True
+    volumes:
+      # Volume для hot-reload (монтирование исходного кода)
+      - ./backend:/app
+      # Volume для сохранения базы данных
+      - backend-data:/app/data
+    networks:
+      - fitness-network
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend сервис (Vite dev server)
+  frontend:
+    build:
+      context: ./fitness-client
+      dockerfile: Dockerfile.dev
+    container_name: fitness-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    volumes:
+      # Volume для hot-reload
+      - ./fitness-client:/app
+      - /app/node_modules  # Исключаем node_modules из синхронизации
+    networks:
+      - fitness-network
+    depends_on:
+      - backend
+    command: npm run dev -- --host 0.0.0.0
+
+networks:
+  fitness-network:
+    driver: bridge
+
+volumes:
+  backend-data:
+    driver: local

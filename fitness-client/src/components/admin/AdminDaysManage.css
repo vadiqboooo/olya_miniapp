@@ -1,0 +1,207 @@
+.admin-days-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Верхний хедер */
+.admin-page-header {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-info h1 {
+  margin: 8px 0;
+  font-size: 24px;
+  color: #111827;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.program-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag {
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.program-desc-short {
+  color: #6b7280;
+  margin-top: 12px;
+  font-size: 14px;
+  max-width: 600px;
+}
+
+/* Разделение контента */
+.admin-content-split {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* 2/3 список, 1/3 форма */
+  gap: 24px;
+  align-items: start;
+}
+
+/* Секция списка дней */
+.days-list-section h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.day-card-admin {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.day-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.day-number-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.exercises-count {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.day-title {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.day-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.day-actions .btn {
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 6px 12px;
+}
+
+.delete-btn:hover {
+  color: #b91c1c;
+}
+
+/* Секция добавления */
+.add-day-card {
+  position: sticky;
+  top: 20px;
+}
+
+.add-day-card h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.form-actions-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.empty-state-box {
+  background: #f9fafb;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  color: #6b7280;
+  border: 1px dashed #d1d5db;
+}
+
+/* АДАПТИВНОСТЬ */
+@media (max-width: 900px) {
+  .admin-content-split {
+    display: flex;
+    flex-direction: column; /* Список и форма друг под другом */
+    gap: 30px;
+  }
+
+  /* Переносим форму добавления наверх на мобильных для удобства */
+  .add-day-section {
+    order: -1; 
+  }
+
+  .add-day-card {
+    position: static; /* Убираем прилипание */
+  }
+
+  .days-grid {
+    grid-template-columns: 1fr; /* Карточки дней в одну колонку */
+  }
+
+  .admin-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .admin-page-header .btn {
+    width: 100%; /* Кнопка "Завершить" на всю ширину */
+  }
+}
+
+@media (max-width: 600px) {
+  .day-actions {
+    flex-direction: column; /* Кнопки в карточке дня друг под другом */
+    gap: 8px;
+  }
+
+  .day-actions .btn {
+    width: 100%;
+  }
+}

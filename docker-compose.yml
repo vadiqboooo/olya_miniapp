@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Backend сервис (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fitness-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./data/workout_app.db
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - DEBUG=False
+    volumes:
+      # Volume для сохранения базы данных
+      - backend-data:/app/data
+      # Для разработки можно раскомментировать для hot-reload
+      # - ./backend:/app
+    networks:
+      - fitness-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend сервис (React + Nginx)
+  frontend:
+    build:
+      context: ./fitness-client
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: fitness-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - fitness-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  fitness-network:
+    driver: bridge
+
+volumes:
+  backend-data:
+    driver: local

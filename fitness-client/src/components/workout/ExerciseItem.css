@@ -1,0 +1,58 @@
+.exercise-item {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s;
+}
+
+.exercise-item:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.exercise-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.exercise-meta {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-color);
+  background: #e0e7ff;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.exercise-desc {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.exercise-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rest-badge {
+  font-size: 12px;
+  color: #4b5563;
+  background: #f3f4f6;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

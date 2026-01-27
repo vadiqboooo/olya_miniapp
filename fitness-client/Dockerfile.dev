@@ -1,0 +1,18 @@
+# Development Dockerfile для React приложения с hot-reload
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Установка зависимостей
+COPY package*.json ./
+RUN npm ci
+
+# Копирование исходного кода (для первого запуска)
+COPY . .
+
+# Открытие порта Vite
+EXPOSE 5173
+
+# Запуск dev сервера
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

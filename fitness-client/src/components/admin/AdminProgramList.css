@@ -1,0 +1,248 @@
+.admin-programs-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Хедер */
+.admin-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.admin-page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #111827;
+}
+
+/* Фильтры */
+.filters-card {
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.search-box {
+  flex: 2;
+  min-width: 250px;
+}
+
+.selects-row {
+  flex: 3;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.selects-row .form-select {
+  flex: 1;
+  min-width: 140px;
+}
+
+.filters-actions {
+  margin-top: 16px;
+  text-align: right;
+}
+
+.reset-filters-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Сетка программ */
+.programs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.program-card-admin {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #e5e7eb;
+}
+
+.card-header {
+  margin-bottom: 12px;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.card-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.card-desc {
+  flex-grow: 1;
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.card-stats {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.edit-btn {
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  flex-grow: 1;
+}
+.edit-btn:hover { background: #d1d5db; }
+
+.delete-btn-icon {
+  background: #fee2e2;
+  border: none;
+  width: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #ef4444;
+}
+.delete-btn-icon:hover { background: #fecaca; }
+
+/* Empty State */
+.empty-state-large {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+.empty-state-large h3 { font-size: 20px; margin-bottom: 8px; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal-content h2 { margin-top: 0; color: #b91c1c; }
+.modal-content p { color: #4b5563; line-height: 1.5; }
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Danger Button (нужно добавить в Button.css или использовать класс тут) */
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+/* ... существующие стили ... */
+
+/* АДАПТИВНОСТЬ */
+@media (max-width: 900px) {
+  .programs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Чуть меньшие карточки */
+  }
+}
+
+@media (max-width: 768px) {
+  /* Фильтры */
+  .filters-row {
+    flex-direction: column;
+    align-items: stretch; /* Растянуть на всю ширину */
+  }
+
+  .search-box, .selects-row {
+    width: 100%;
+  }
+
+  .selects-row {
+    flex-direction: column; /* Селекты друг под другом */
+  }
+
+  /* Хедер */
+  .admin-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .admin-page-header .btn {
+    width: 100%; /* Кнопка создания на всю ширину */
+  }
+
+  /* Карточки */
+  .programs-grid {
+    grid-template-columns: 1fr; /* Карточки в одну колонку */
+  }
+
+  .card-actions {
+    flex-direction: column; /* Кнопки под друг другом */
+    gap: 10px;
+  }
+
+  .card-actions .btn, .edit-btn {
+    width: 100%;
+  }
+}
