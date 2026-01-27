@@ -25,11 +25,24 @@ const AdminProgramList = () => {
   // --- Модальное окно ---
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, program: null });
 
-  // --- Опции фильтров ---
+  // --- Опции фильтров (те же значения, что в OnboardingForm) ---
   const filterOptions = {
-    difficulty: ['Начальный', 'Средний', 'Продвинутый'],
-    goal: ['Похудение', 'Набор массы', 'Выносливость', 'Гибкость'],
-    location: ['Дома', 'Зал', 'Улица']
+    difficulty: [
+      { value: 'beginner', label: 'Начальный' },
+      { value: 'intermediate', label: 'Средний' },
+      { value: 'advanced', label: 'Продвинутый' }
+    ],
+    goal: [
+      { value: 'weight_loss', label: 'Похудение' },
+      { value: 'muscle_gain', label: 'Набор массы' },
+      { value: 'endurance', label: 'Выносливость' },
+      { value: 'flexibility', label: 'Гибкость' }
+    ],
+    location: [
+      { value: 'home', label: 'Дома' },
+      { value: 'gym', label: 'Зал' },
+      { value: 'street', label: 'Улица' }
+    ]
   };
 
   // --- Загрузка данных ---
@@ -112,10 +125,16 @@ const AdminProgramList = () => {
     }
   };
 
+  // --- Преобразование ID в русские названия ---
+  const getLabel = (type, value) => {
+    const option = filterOptions[type].find(opt => opt.value === value);
+    return option ? option.label : value;
+  };
+
   // --- Вычисляемые значения для статистики ---
   const getStats = (program) => {
     const daysCount = program.workouts ? program.workouts.length : 0;
-    const exCount = program.workouts 
+    const exCount = program.workouts
       ? program.workouts.reduce((acc, day) => acc + (day.exercises ? day.exercises.length : 0), 0)
       : 0;
     return `${daysCount} дн. • ${exCount} упр.`;
@@ -147,36 +166,36 @@ const AdminProgramList = () => {
           </div>
 
           <div className="selects-row">
-            <select 
-              value={difficulty} 
+            <select
+              value={difficulty}
               onChange={(e) => updateFilters('difficulty', e.target.value)}
               className="form-select"
             >
               <option value="">Все уровни</option>
               {filterOptions.difficulty.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
 
-            <select 
-              value={goal} 
+            <select
+              value={goal}
               onChange={(e) => updateFilters('goal', e.target.value)}
               className="form-select"
             >
               <option value="">Все цели</option>
               {filterOptions.goal.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
 
-            <select 
-              value={location} 
+            <select
+              value={location}
               onChange={(e) => updateFilters('location', e.target.value)}
               className="form-select"
             >
               <option value="">Все места</option>
               {filterOptions.location.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
           </div>
@@ -218,9 +237,9 @@ const AdminProgramList = () => {
             <Card key={program.id} className="program-card-admin">
               <div className="card-header">
                 <div className="badges">
-                  <span className="tag">{program.difficulty}</span>
-                  <span className="tag">{program.goal}</span>
-                  <span className="tag">{program.location}</span>
+                  <span className="tag">{getLabel('difficulty', program.difficulty)}</span>
+                  <span className="tag">{getLabel('goal', program.goal)}</span>
+                  <span className="tag">{getLabel('location', program.location)}</span>
                 </div>
               </div>
               

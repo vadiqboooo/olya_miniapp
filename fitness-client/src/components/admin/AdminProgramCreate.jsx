@@ -22,11 +22,24 @@ const AdminProgramCreate = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState('');
 
-  // Опции для селектов
+  // Опции для селектов (используем те же значения, что в OnboardingForm)
   const options = {
-    difficulty: ['Начальный', 'Средний', 'Продвинутый'],
-    goal: ['Похудение', 'Набор массы', 'Выносливость', 'Гибкость'],
-    location: ['Дома', 'Зал', 'Улица']
+    difficulty: [
+      { value: 'beginner', label: 'Начальный' },
+      { value: 'intermediate', label: 'Средний' },
+      { value: 'advanced', label: 'Продвинутый' }
+    ],
+    goal: [
+      { value: 'weight_loss', label: 'Похудение' },
+      { value: 'muscle_gain', label: 'Набор массы' },
+      { value: 'endurance', label: 'Выносливость' },
+      { value: 'flexibility', label: 'Гибкость' }
+    ],
+    location: [
+      { value: 'home', label: 'Дома' },
+      { value: 'gym', label: 'Зал' },
+      { value: 'street', label: 'Улица' }
+    ]
   };
 
   // Обработчик изменений в инпутах
@@ -167,7 +180,7 @@ const AdminProgramCreate = () => {
             >
               <option value="">Выберите уровень...</option>
               {options.difficulty.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
             {errors.difficulty && <span className="field-error">{errors.difficulty}</span>}
@@ -187,7 +200,7 @@ const AdminProgramCreate = () => {
             >
               <option value="">Выберите цель...</option>
               {options.goal.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
             {errors.goal && <span className="field-error">{errors.goal}</span>}
@@ -207,7 +220,7 @@ const AdminProgramCreate = () => {
             >
               <option value="">Выберите место...</option>
               {options.location.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
             {errors.location && <span className="field-error">{errors.location}</span>}

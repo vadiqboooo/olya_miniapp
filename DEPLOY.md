@@ -90,7 +90,7 @@ chmod +x setup-ssl.sh
 
 ```bash
 # Запустите с HTTPS
-docker-compose up -d --build
+docker compose up -d --build
 
 # Проверьте статус
 docker-compose ps
