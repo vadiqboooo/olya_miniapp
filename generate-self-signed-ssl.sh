@@ -15,27 +15,35 @@ mkdir -p $CERT_DIR
 
 # Генерируем приватный ключ
 echo "1. Генерация приватного ключа..."
-openssl genrsa -out $CERT_DIR/privkey.pem 4096
+openssl genrsa -out $CERT_DIR/privkey.pem 2048
 
 # Создаем конфигурационный файл для сертификата с IP адресом
 cat > $CERT_DIR/openssl.cnf << EOF
 [req]
-default_bits = 4096
+default_bits = 2048
 prompt = no
 default_md = sha256
 distinguished_name = dn
 req_extensions = v3_req
+x509_extensions = v3_ca
 
 [dn]
 C=US
 ST=State
 L=City
-O=Organization
-OU=IT
+O=Fitness App
+OU=IT Department
 CN=$IP_ADDRESS
 
 [v3_req]
-keyUsage = keyEncipherment, dataEncipherment
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment, keyAgreement
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[v3_ca]
+basicConstraints = critical, CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment, keyAgreement
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
@@ -43,26 +51,22 @@ subjectAltName = @alt_names
 IP.1 = $IP_ADDRESS
 EOF
 
-# Генерируем CSR (Certificate Signing Request)
-echo "2. Генерация CSR..."
-openssl req -new -key $CERT_DIR/privkey.pem \
-    -out $CERT_DIR/cert.csr \
-    -config $CERT_DIR/openssl.cnf
-
-# Генерируем самоподписанный сертификат на 365 дней
-echo "3. Генерация самоподписанного сертификата..."
-openssl x509 -req \
-    -days 365 \
-    -in $CERT_DIR/cert.csr \
-    -signkey $CERT_DIR/privkey.pem \
+# Генерируем самоподписанный сертификат напрямую (без CSR)
+echo "2. Генерация самоподписанного сертификата (365 дней)..."
+openssl req -new -x509 \
+    -key $CERT_DIR/privkey.pem \
     -out $CERT_DIR/fullchain.pem \
-    -extensions v3_req \
-    -extfile $CERT_DIR/openssl.cnf
+    -days 365 \
+    -config $CERT_DIR/openssl.cnf \
+    -extensions v3_ca
 
 # Проверяем сертификат
 echo ""
-echo "4. Проверка сертификата:"
+echo "3. Проверка сертификата:"
+echo ""
 openssl x509 -in $CERT_DIR/fullchain.pem -text -noout | grep -A 2 "Subject Alternative Name"
+echo ""
+openssl x509 -in $CERT_DIR/fullchain.pem -text -noout | grep -A 3 "X509v3 Key Usage"
 
 echo ""
 echo "=== ✓ Готово! ==="
@@ -70,6 +74,9 @@ echo ""
 echo "Сертификаты созданы в директории: $CERT_DIR/"
 echo "  - privkey.pem (приватный ключ)"
 echo "  - fullchain.pem (сертификат)"
+echo ""
+echo "Срок действия сертификата:"
+openssl x509 -in $CERT_DIR/fullchain.pem -noout -dates
 echo ""
 echo "⚠️  ВАЖНО: Это самоподписанный сертификат!"
 echo "Браузеры будут показывать предупреждение о безопасности."
