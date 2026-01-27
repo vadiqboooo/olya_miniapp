@@ -138,7 +138,7 @@ const AdminExercisesManage = () => {
         ));
       } else {
         // Создание
-        const response = await api.post('/exercises/', payload);
+        const response = await api.post('/exercises', payload);
         setExercises([...exercises, response.data]);
       }
 

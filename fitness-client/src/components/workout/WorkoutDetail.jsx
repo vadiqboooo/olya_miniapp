@@ -123,7 +123,7 @@ const WorkoutDetail = () => {
             is_completed: false // Создаем "пустую" запись
         };
         
-        const postRes = await api.post(`/progress/`, newProgressData);
+        const postRes = await api.post(`/progress`, newProgressData);
         const createdId = postRes.data.id;
 
         // Сразу же ставим нужный статус (создание прошло успешно)

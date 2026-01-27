@@ -92,7 +92,7 @@ const AdminProgramCreate = () => {
 
     try {
       // Отправка данных на бэкенд
-      const response = await api.post('/programs/', {
+      const response = await api.post('/programs', {
         name: formData.name,
         description: formData.description || '',
         difficulty: formData.difficulty,

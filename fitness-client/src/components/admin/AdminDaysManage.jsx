@@ -65,7 +65,7 @@ const AdminDaysManage = () => {
       // Вычисляем следующий номер дня (max + 1)
       const nextDayNumber = workouts.length > 0 ? Math.max(...workouts.map(w => w.day_number)) + 1 : 1;
 
-      const response = await api.post('/workouts/', {
+      const response = await api.post('/workouts', {
         program_id: parseInt(programId),
         day_number: nextDayNumber,
         title: newDayTitle,

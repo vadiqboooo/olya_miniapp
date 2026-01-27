@@ -57,7 +57,7 @@ const AdminProgramList = () => {
         if (goal) params.goal = goal;
         if (location) params.location = location;
 
-        const response = await api.get('/programs/', { params });
+        const response = await api.get('/programs', { params });
         
         // Предполагаем, что бэкенд возвращает массив
         let data = response.data;
