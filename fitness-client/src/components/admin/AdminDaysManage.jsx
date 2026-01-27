@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Loader from '../ui/Loader';
@@ -30,11 +30,11 @@ const AdminDaysManage = () => {
         
         // 1. Загружаем информацию о программе (чтобы показать хедер)
         // Предполагается эндпоинт GET /programs/{id}
-        const progRes = await axios.get(`http://127.0.0.1:8000/programs/${programId}`);
+        const progRes = await api.get(`/programs/${programId}`);
         setProgramInfo(progRes.data);
 
         // 2. Загружаем список дней (тренировок)
-        const workRes = await axios.get(`http://127.0.0.1:8000/workouts/${programId}`);
+        const workRes = await api.get(`/workouts/${programId}`);
         
         // Сортируем по номеру дня
         const sortedWorkouts = Array.isArray(workRes.data) 
@@ -65,7 +65,7 @@ const AdminDaysManage = () => {
       // Вычисляем следующий номер дня (max + 1)
       const nextDayNumber = workouts.length > 0 ? Math.max(...workouts.map(w => w.day_number)) + 1 : 1;
 
-      const response = await axios.post('http://127.0.0.1:8000/workouts/', {
+      const response = await api.post('/workouts/', {
         program_id: parseInt(programId),
         day_number: nextDayNumber,
         title: newDayTitle,
@@ -101,7 +101,7 @@ const AdminDaysManage = () => {
     }
 
     try {
-      await axios.delete(`http://127.0.0.1:8000/workouts/${workoutId}`);
+      await api.delete(`/workouts/${workoutId}`);
       // Удаляем из локального стейта
       setWorkouts(workouts.filter(w => w.id !== workoutId));
     } catch (err) {

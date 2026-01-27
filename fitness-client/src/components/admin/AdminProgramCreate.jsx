@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import './AdminForms.css'; // Будем использовать общие стили для админки
@@ -79,7 +79,7 @@ const AdminProgramCreate = () => {
 
     try {
       // Отправка данных на бэкенд
-      const response = await axios.post('http://127.0.0.1:8000/programs/', {
+      const response = await api.post('/programs/', {
         name: formData.name,
         description: formData.description || '',
         difficulty: formData.difficulty,

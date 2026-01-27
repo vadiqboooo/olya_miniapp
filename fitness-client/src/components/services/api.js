@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // Получаем URL API из переменных окружения или используем значение по умолчанию
 const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+console.log(API_URL)
 
 const api = axios.create({
   baseURL: API_URL, // Адрес вашего FastAPI бэкенда

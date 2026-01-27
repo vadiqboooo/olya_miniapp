@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Loader from '../ui/Loader';
@@ -44,7 +44,7 @@ const AdminProgramList = () => {
         if (goal) params.goal = goal;
         if (location) params.location = location;
 
-        const response = await axios.get('http://127.0.0.1:8000/programs/', { params });
+        const response = await api.get('/programs/', { params });
         
         // Предполагаем, что бэкенд возвращает массив
         let data = response.data;
@@ -104,7 +104,7 @@ const AdminProgramList = () => {
     if (!deleteModal.program) return;
     
     try {
-      await axios.delete(`http://127.0.0.1:8000/programs/${deleteModal.program.id}`);
+      await api.delete(`/programs/${deleteModal.program.id}`);
       setPrograms(programs.filter(p => p.id !== deleteModal.program.id));
       setDeleteModal({ isOpen: false, program: null });
     } catch (err) {

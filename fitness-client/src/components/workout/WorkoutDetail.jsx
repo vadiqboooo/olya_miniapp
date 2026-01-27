@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom'; // <--- Добавляем useLocation
-import axios from 'axios';
+import api from '../services/api';
 import ExerciseItem from './ExerciseItem';
 import Loader from '../ui/Loader';
 import './WorkoutDetail.css';
@@ -37,7 +37,7 @@ const WorkoutDetail = () => {
 
   const checkProgressStatus = async () => {
     try {
-      const progressRes = await axios.get(`http://127.0.0.1:8000/users/${CURRENT_USER_ID}/progress`);
+      const progressRes = await api.get(`/users/${CURRENT_USER_ID}/progress`);
       const progressList = progressRes.data;
       const existingProgress = progressList.find(p => p.workout_id === parseInt(workoutId));
       
@@ -57,9 +57,9 @@ const WorkoutDetail = () => {
       setIsLoading(true);
       
       // 1. Загружаем упражнения
-      const exResponse = await axios.get(`http://127.0.0.1:8000/workouts/${workoutId}/exercises`);
+      const exResponse = await api.get(`/workouts/${workoutId}/exercises`);
       const exercisesData = exResponse.data;
-      
+
       if (Array.isArray(exercisesData)) {
           setExercises(exercisesData);
       } else {
@@ -67,7 +67,7 @@ const WorkoutDetail = () => {
       }
 
       // 2. Загружаем инфо о тренировке
-      const workoutResponse = await axios.get(`http://127.0.0.1:8000/workouts/${workoutId}`);
+      const workoutResponse = await api.get(`/workouts/${workoutId}`);
       let workoutData = workoutResponse.data;
 
       if (Array.isArray(workoutData)) {
@@ -97,13 +97,13 @@ const WorkoutDetail = () => {
 
     try {
       // 1. Загружаем текущий прогресс, чтобы найти ID записи
-      const progressRes = await axios.get(`http://127.0.0.1:8000/users/${CURRENT_USER_ID}/progress`);
+      const progressRes = await api.get(`/users/${CURRENT_USER_ID}/progress`);
       const progressList = progressRes.data;
       const existingProgress = progressList.find(p => p.workout_id === parseInt(workoutId));
 
       if (existingProgress) {
         // 2. Если запись есть - обновляем её (теперь можно и True, и False)
-        await axios.patch(`http://127.0.0.1:8000/progress/${existingProgress.id}/complete`, {
+        await api.patch(`/progress/${existingProgress.id}/complete`, {
             is_completed: newStatus // <--- Отправляем новое значение
         });
         
@@ -123,11 +123,11 @@ const WorkoutDetail = () => {
             is_completed: false // Создаем "пустую" запись
         };
         
-        const postRes = await axios.post(`http://127.0.0.1:8000/progress/`, newProgressData);
+        const postRes = await api.post(`/progress/`, newProgressData);
         const createdId = postRes.data.id;
 
         // Сразу же ставим нужный статус (создание прошло успешно)
-        await axios.patch(`http://127.0.0.1:8000/progress/${createdId}/complete`, {
+        await api.patch(`/progress/${createdId}/complete`, {
             is_completed: newStatus
         });
         

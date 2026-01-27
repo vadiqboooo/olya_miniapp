@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import Loader from '../ui/Loader';
-import './AdminForms.css'; 
+import './AdminForms.css';
 import './AdminExercisesManage.css';
 
 const AdminExercisesManage = () => {
@@ -42,14 +42,14 @@ const AdminExercisesManage = () => {
       setLoading(true);
       
       // 1. Инфо о программе
-      const progRes = await axios.get(`http://127.0.0.1:8000/programs/${programId}`);
+      const progRes = await api.get(`/programs/${programId}`);
       setProgramName(progRes.data.name);
 
       // 2. Инфо о тренировке (ЗДЕСЬ ИЗМЕНЕНИЕ)
       // БЫЛО: const workRes = await axios.get(`http://127.0.0.1:8000/workouts/${workoutId}`);
       
       // СТАЛО: Используем новый эндпоинт для получения одной тренировки
-      const workRes = await axios.get(`http://127.0.0.1:8000/workouts/single/${workoutId}`);
+      const workRes = await api.get(`/workouts/single/${workoutId}`);
       
       const workout = workRes.data;
       
@@ -132,13 +132,13 @@ const AdminExercisesManage = () => {
 
       if (editingId) {
         // Обновление
-        await axios.put(`http://127.0.0.1:8000/exercises/${editingId}`, payload);
+        await api.put(`/exercises/${editingId}`, payload);
         setExercises(exercises.map(ex => 
           ex.id === editingId ? { ...payload, id: editingId } : ex
         ));
       } else {
         // Создание
-        const response = await axios.post('http://127.0.0.1:8000/exercises/', payload);
+        const response = await api.post('/exercises/', payload);
         setExercises([...exercises, response.data]);
       }
 
@@ -157,7 +157,7 @@ const AdminExercisesManage = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Удалить это упражнение?')) return;
     try {
-      await axios.delete(`http://127.0.0.1:8000/exercises/${id}`);
+      await api.delete(`/exercises/${id}`);
       setExercises(exercises.filter(ex => ex.id !== id));
       // Если редактируем это упражнение, сбрасываем форму
       if (editingId === id) resetForm();

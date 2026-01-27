@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import Card from '../ui/Card';
 import Loader from '../ui/Loader';
 import DayCard from './DayCard';
@@ -24,7 +24,7 @@ const WorkoutTracker = () => {
   const loadProgress = async () => {
     try {
       // Запрашиваем прогресс у сервера
-      const response = await axios.get(`http://127.0.0.1:8000/users/${CURRENT_USER_ID}/progress`);
+      const response = await api.get(`/users/${CURRENT_USER_ID}/progress`);
       const progressList = response.data;
       
       // Фильтруем только те записи, которые относятся к ТЕКУЩЕЙ программе
@@ -47,9 +47,9 @@ const WorkoutTracker = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        
+
         // 1. Загружаем тренировки
-        const response = await axios.get(`http://127.0.0.1:8000/workouts/${programId}`);
+        const response = await api.get(`/workouts/${programId}`);
         const data = response.data;
 
         if (!Array.isArray(data)) {
