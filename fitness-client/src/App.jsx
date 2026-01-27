@@ -13,32 +13,37 @@ import AdminProgramList from './components/admin/AdminProgramList';
 
 function App() {
   return (
-    <TelegramAuthProvider>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          {/* Главная страница - будет автоматически редиректить */}
-          <Route index element={<div>Loading...</div>} />
+    <Routes>
+      {/* Админ роуты БЕЗ Telegram авторизации */}
+      <Route path="/admin" element={<Layout />}>
+        <Route path="programs" element={<AdminProgramList />} />
+        <Route path="programs/create" element={<AdminProgramCreate />} />
+        <Route path="programs/:programId/days" element={<AdminDaysManage />} />
+        <Route path="programs/:programId/days/:workoutId/exercises" element={<AdminExercisesManage />} />
+      </Route>
 
-          {/* Onboarding - выбор программы */}
-          <Route path="onboarding" element={<OnboardingForm />} />
+      {/* Основные роуты С Telegram авторизацией */}
+      <Route path="/" element={
+        <TelegramAuthProvider>
+          <Layout />
+        </TelegramAuthProvider>
+      }>
+        {/* Главная страница - будет автоматически редиректить */}
+        <Route index element={<div>Loading...</div>} />
 
-          {/* Основной экран трекера */}
-          <Route path="tracker/:programId" element={<WorkoutTracker />} />
+        {/* Onboarding - выбор программы */}
+        <Route path="onboarding" element={<OnboardingForm />} />
 
-          {/* Экран детальной тренировки */}
-          <Route path="tracker/:programId/workout/:workoutId" element={<WorkoutDetail />} />
+        {/* Основной экран трекера */}
+        <Route path="tracker/:programId" element={<WorkoutTracker />} />
 
-          {/* Админ панель */}
-          <Route path="admin/programs" element={<AdminProgramList />} />
-          <Route path="admin/programs/create" element={<AdminProgramCreate />} />
-          <Route path="admin/programs/:programId/days" element={<AdminDaysManage />} />
-          <Route path="admin/programs/:programId/days/:workoutId/exercises" element={<AdminExercisesManage />} />
+        {/* Экран детальной тренировки */}
+        <Route path="tracker/:programId/workout/:workoutId" element={<WorkoutDetail />} />
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-      </Routes>
-    </TelegramAuthProvider>
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    </Routes>
   );
 }
 
