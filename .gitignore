@@ -1,5 +1,9 @@
 # SSL сертификаты (не должны быть в репозитории)
 certbot/
+ssl-self-signed/
+*.pem
+*.csr
+*.key
 
 # Environment files with sensitive data
 .env.local
