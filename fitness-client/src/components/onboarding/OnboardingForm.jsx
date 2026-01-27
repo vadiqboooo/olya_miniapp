@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTelegramAuth } from '../../context/TelegramAuthContext';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { matchProgram } from '../services/api';
+import api from '../services/api';
 import './OnboardingForm.css';
 
 // Константы для выбора
@@ -27,6 +29,7 @@ const LOCATIONS = [
 
 const OnboardingForm = () => {
   const navigate = useNavigate();
+  const { currentUser } = useTelegramAuth();
   const [formData, setFormData] = useState({
     difficulty: '',
     goal: '',
@@ -79,11 +82,28 @@ const OnboardingForm = () => {
         const selectedProgram = programs[0];
         const programId = selectedProgram.id;
 
-        // (Опционально) Сохраняем выбор в localStorage, чтобы при возврате помнить программу
+        // Создаем запись прогресса для пользователя
+        if (currentUser) {
+          try {
+            // Создаем пустую запись прогресса для выбранной программы
+            await api.post('/progress', {
+              user_id: currentUser.id,
+              program_id: programId,
+              workout_id: selectedProgram.workouts?.[0]?.id || 1, // Первая тренировка или дефолтная
+              is_completed: false
+            });
+            console.log('Progress record created for user:', currentUser.id);
+          } catch (progressErr) {
+            // Игнорируем ошибку если запись уже существует
+            console.warn('Could not create progress record:', progressErr);
+          }
+        }
+
+        // Сохраняем выбор в localStorage
         localStorage.setItem('currentProgramId', programId);
         localStorage.setItem('currentProgramName', selectedProgram.name);
 
-        // 4. Переход на экран трекера, передавая ID программы в URL
+        // Переход на экран трекера
         navigate(`/tracker/${programId}`);
       } else {
         // Если массив пуст или бэкенд ничего не вернул
