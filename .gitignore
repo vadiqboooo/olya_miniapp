@@ -1,0 +1,24 @@
+# SSL сертификаты (не должны быть в репозитории)
+certbot/
+
+# Environment files with sensitive data
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker volumes
+data/

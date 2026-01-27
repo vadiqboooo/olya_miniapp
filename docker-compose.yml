@@ -35,13 +35,18 @@ services:
       context: ./fitness-client
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://64.188.73.81:8000
+        - VITE_API_URL=https://vm725864.hosted-by.u1host.com/api
     container_name: fitness-frontend
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - backend
+    volumes:
+      # SSL сертификаты
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     networks:
       - fitness-network
     healthcheck:
@@ -50,6 +55,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  # Certbot для автоматического обновления SSL сертификатов
+  certbot:
+    image: certbot/certbot
+    container_name: fitness-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 networks:
   fitness-network:
