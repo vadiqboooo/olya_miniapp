@@ -35,7 +35,7 @@ services:
       context: ./fitness-client
       dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://64.188.73.81:8000
+        - VITE_API_URL=https://miniapp.rancheasy.ru/api
     container_name: fitness-frontend
     restart: unless-stopped
     ports:
