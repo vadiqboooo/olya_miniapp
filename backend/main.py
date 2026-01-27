@@ -37,7 +37,7 @@ def health_check():
     return {"status": "healthy"}
 
 
-@app.post("/users/", response_model=schemas.User)
+@app.post("/users", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.telegram_id == user.telegram_id).first()
     if db_user:
@@ -58,7 +58,7 @@ def get_user(telegram_id: str, db: Session = Depends(get_db)):
     return user
 
 
-@app.get("/programs/", response_model=List[schemas.WorkoutProgram])
+@app.get("/programs", response_model=List[schemas.WorkoutProgram])
 def get_programs(
     difficulty: Optional[str] = Query(None, description="Filter by difficulty level"),
     goal: Optional[str] = Query(None, description="Filter by goal"),
@@ -133,7 +133,7 @@ def get_program(program_id: int, db: Session = Depends(get_db)):
     return program
 
 
-@app.post("/programs/", response_model=schemas.WorkoutProgram)
+@app.post("/programs", response_model=schemas.WorkoutProgram)
 def create_program(program: schemas.WorkoutProgramCreate, db: Session = Depends(get_db)):
     new_program = models.WorkoutProgram(**program.dict())
     db.add(new_program)
@@ -165,7 +165,7 @@ def get_workouts_by_program(program_id: int, db: Session = Depends(get_db)):
     workouts = db.query(models.Workout).filter(models.Workout.program_id == program_id).all()
     return workouts
 
-@app.post("/workouts/", response_model=schemas.Workout)
+@app.post("/workouts", response_model=schemas.Workout)
 def create_workout(workout: schemas.WorkoutCreate, db: Session = Depends(get_db)):
     """
     Создает новый день в программе.
@@ -206,7 +206,7 @@ def get_workout_exercises(workout_id: int, db: Session = Depends(get_db)):
     return workout.exercises
 
 
-@app.post("/progress/", response_model=schemas.UserProgress)
+@app.post("/progress", response_model=schemas.UserProgress)
 def create_progress(progress: schemas.UserProgressCreate, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == progress.user_id).first()
     if not user:
@@ -226,7 +226,7 @@ def create_progress(progress: schemas.UserProgressCreate, db: Session = Depends(
     db.refresh(new_progress)
     return new_progress
 
-@app.post("/exercises/", response_model=schemas.Exercise)
+@app.post("/exercises", response_model=schemas.Exercise)
 def create_exercise(exercise: schemas.ExerciseCreate, db: Session = Depends(get_db)):
     """
     Создает новое упражнение.
