@@ -223,14 +223,14 @@ const OnboardingForm = () => {
       <form onSubmit={handleSubmit}>
         <div className="form-section-group">
           <h2 className="group-title">Основная информация</h2>
-          {renderOptionGrid('Ваш пол (необязательно)', 'gender', GENDERS)}
+          {renderOptionGrid('Ваш пол', 'gender', GENDERS)}
           {renderOptionGrid('Ваш уровень подготовки', 'difficulty', DIFFICULTIES)}
           {renderOptionGrid('Ваша цель', 'goal', GOALS)}
           {renderOptionGrid('Где будете тренироваться?', 'location', LOCATIONS)}
         </div>
 
         <div className="form-section-group">
-          <h2 className="group-title">Дополнительная информация (необязательно)</h2>
+          <h2 className="group-title">Дополнительная информация</h2>
           {renderOptionGrid('Ограничения по здоровью', 'health_restriction', HEALTH_RESTRICTIONS)}
           {renderOptionGrid('Предпочтения в программе', 'program_preference', PROGRAM_PREFERENCES)}
         </div>
