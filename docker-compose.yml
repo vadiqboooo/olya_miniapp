@@ -16,8 +16,8 @@ services:
       - API_PORT=8000
       - DEBUG=False
     volumes:
-      # Volume для сохранения базы данных
-      - backend-data:/app/data
+      # Volume для сохранения базы данных (теперь в локальной папке)
+      - ./backend/data:/app/data
       # Для разработки можно раскомментировать для hot-reload
       # - ./backend:/app
     networks:

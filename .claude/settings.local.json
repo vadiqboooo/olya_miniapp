@@ -6,7 +6,8 @@
       "Bash(git push)",
       "Bash(git commit:*)",
       "Bash(python:*)",
-      "Bash(sqlite3:*)"
+      "Bash(sqlite3:*)",
+      "Bash(docker cp:*)"
     ]
   }
 }
