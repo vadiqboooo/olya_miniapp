@@ -25,7 +25,7 @@ class WorkoutProgram(Base):
     description = Column(Text)
 
     workouts = relationship("Workout", back_populates="program", cascade="all, delete-orphan")
-    user_progress = relationship("UserProgress", back_populates="program")
+    user_progress = relationship("UserProgress", back_populates="program", cascade="all, delete-orphan")
 
 
 class Workout(Base):
@@ -39,7 +39,7 @@ class Workout(Base):
 
     program = relationship("WorkoutProgram", back_populates="workouts")
     exercises = relationship("Exercise", back_populates="workout", cascade="all, delete-orphan")
-    user_progress = relationship("UserProgress", back_populates="workout")
+    user_progress = relationship("UserProgress", back_populates="workout", cascade="all, delete-orphan")
 
 
 class Exercise(Base):
@@ -60,9 +60,9 @@ class UserProgress(Base):
     __tablename__ = "user_progress"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    program_id = Column(Integer, ForeignKey("workout_programs.id"), nullable=False)
-    workout_id = Column(Integer, ForeignKey("workouts.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    program_id = Column(Integer, ForeignKey("workout_programs.id", ondelete="CASCADE"), nullable=False)
+    workout_id = Column(Integer, ForeignKey("workouts.id", ondelete="CASCADE"), nullable=False)
     is_completed = Column(Boolean, default=False)
     completed_at = Column(DateTime, nullable=True)
 

@@ -30,13 +30,33 @@ const LOCATIONS = [
 const OnboardingForm = () => {
   const navigate = useNavigate();
   const { currentUser } = useTelegramAuth();
-  const [formData, setFormData] = useState({
-    difficulty: '',
-    goal: '',
-    location: '',
-  });
+
+  // Восстанавливаем ранее выбранные параметры из localStorage
+  const getSavedFormData = () => {
+    try {
+      const saved = localStorage.getItem('onboardingFormData');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (err) {
+      console.warn('Failed to parse saved form data:', err);
+    }
+    return {
+      difficulty: '',
+      goal: '',
+      location: '',
+    };
+  };
+
+  const [formData, setFormData] = useState(getSavedFormData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  // Проверяем, были ли восстановлены ранее выбранные параметры
+  const [hasRestoredData, setHasRestoredData] = useState(() => {
+    const saved = localStorage.getItem('onboardingFormData');
+    return !!saved;
+  });
 
   // Обработчик выбора опции
   const handleSelect = (field, value) => {
@@ -46,6 +66,18 @@ const OnboardingForm = () => {
     }));
     // Сбрасываем ошибку при изменении
     if (error) setError('');
+  };
+
+  // Очистка выбора
+  const handleClearSelection = () => {
+    setFormData({
+      difficulty: '',
+      goal: '',
+      location: '',
+    });
+    localStorage.removeItem('onboardingFormData');
+    setError('');
+    setHasRestoredData(false);
   };
 
   // Проверка валидности
@@ -65,6 +97,9 @@ const OnboardingForm = () => {
 
     setIsLoading(true);
     setError('');
+
+    // Сохраняем выбранные параметры в localStorage
+    localStorage.setItem('onboardingFormData', JSON.stringify(formData));
 
     try {
       // 2. Вызов API (GET /programs с параметрами фильтрации)
@@ -149,6 +184,12 @@ const OnboardingForm = () => {
         <p>Ответьте на 3 вопроса, чтобы мы подобрали идеальный план</p>
       </header>
 
+      {hasRestoredData && isFormValid() && (
+        <div className="info-message">
+          Ваши предыдущие параметры восстановлены. Вы можете изменить их или подобрать новую программу.
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         {renderOptionGrid('Ваш уровень подготовки', 'difficulty', DIFFICULTIES)}
         {renderOptionGrid('Ваша цель', 'goal', GOALS)}
@@ -157,9 +198,19 @@ const OnboardingForm = () => {
         {error && <div className="error-message">{error}</div>}
 
         <div className="form-actions">
-          <Button 
-            type="submit" 
-            fullWidth 
+          {isFormValid() && (
+            <button
+              type="button"
+              className="clear-selection-btn"
+              onClick={handleClearSelection}
+              disabled={isLoading}
+            >
+              Очистить выбор
+            </button>
+          )}
+          <Button
+            type="submit"
+            fullWidth
             isLoading={isLoading}
             disabled={!isFormValid() && !isLoading}
           >

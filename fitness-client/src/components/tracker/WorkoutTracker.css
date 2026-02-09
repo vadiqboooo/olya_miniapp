@@ -10,9 +10,40 @@
   text-align: center;
 }
 
-.tracker-header h2 {
+.tracker-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
+}
+
+.tracker-header h2 {
+  margin: 0;
   font-size: 20px;
+  flex: 1;
+  text-align: center;
+}
+
+.change-program-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.change-program-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.change-program-btn:active {
+  background-color: #e5e7eb;
 }
 
 .progress-stats {

@@ -116,10 +116,28 @@ const WorkoutTracker = () => {
     return <div className="error-message">{error}</div>;
   }
 
+  const handleChangeProgram = () => {
+    // Очищаем выбранную программу из localStorage
+    localStorage.removeItem('currentProgramId');
+    localStorage.removeItem('currentProgramName');
+
+    // Переходим обратно на страницу выбора программы
+    navigate('/onboarding');
+  };
+
   return (
     <div className="tracker-container">
       <Card className="tracker-header">
-        <h2>Ваш прогресс</h2>
+        <div className="tracker-header-top">
+          <h2>Ваш прогресс</h2>
+          <button
+            className="change-program-btn"
+            onClick={handleChangeProgram}
+            title="Изменить программу"
+          >
+            ⚙️
+          </button>
+        </div>
         <div className="progress-stats">
           <span>Выполнено: {progress}%</span>
           <span className="progress-text-small">
@@ -127,8 +145,8 @@ const WorkoutTracker = () => {
           </span>
         </div>
         <div className="progress-bar-bg">
-          <div 
-            className="progress-bar-fill" 
+          <div
+            className="progress-bar-fill"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
