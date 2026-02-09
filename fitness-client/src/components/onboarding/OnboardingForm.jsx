@@ -8,6 +8,11 @@ import api from '../services/api';
 import './OnboardingForm.css';
 
 // Константы для выбора
+const GENDERS = [
+  { id: 'male', label: 'Мужской', icon: '👨' },
+  { id: 'female', label: 'Женский', icon: '👩' },
+];
+
 const DIFFICULTIES = [
   { id: 'beginner', label: 'Начальный', icon: '🌱' },
   { id: 'intermediate', label: 'Средний', icon: '🔥' },
@@ -27,6 +32,22 @@ const LOCATIONS = [
   { id: 'street', label: 'Улица', icon: '🌳' },
 ];
 
+const HEALTH_RESTRICTIONS = [
+  { id: 'none', label: 'Нет ограничений', icon: '✅' },
+  { id: 'knees', label: 'Проблемы с коленями', icon: '🦵' },
+  { id: 'back', label: 'Проблемы со спиной', icon: '🔙' },
+  { id: 'shoulders', label: 'Проблемы с плечами', icon: '💪' },
+  { id: 'cardiovascular', label: 'Сердечно-сосудистые', icon: '❤️' },
+  { id: 'pregnancy', label: 'Беременность/Послеродовой', icon: '🤰' },
+  { id: 'other', label: 'Другое', icon: '⚕️' },
+];
+
+const PROGRAM_PREFERENCES = [
+  { id: 'circuit', label: 'Круговые', icon: '🔄', description: 'Все группы мышц за тренировку' },
+  { id: 'split', label: 'Сплиты', icon: '📊', description: 'Каждая группа мышц отдельно' },
+  { id: 'no_preference', label: 'Без предпочтений', icon: '🤷' },
+];
+
 const OnboardingForm = () => {
   const navigate = useNavigate();
   const { currentUser } = useTelegramAuth();
@@ -42,9 +63,12 @@ const OnboardingForm = () => {
       console.warn('Failed to parse saved form data:', err);
     }
     return {
+      gender: '',
       difficulty: '',
       goal: '',
       location: '',
+      health_restriction: '',
+      program_preference: '',
     };
   };
 
@@ -71,9 +95,12 @@ const OnboardingForm = () => {
   // Очистка выбора
   const handleClearSelection = () => {
     setFormData({
+      gender: '',
       difficulty: '',
       goal: '',
       location: '',
+      health_restriction: '',
+      program_preference: '',
     });
     localStorage.removeItem('onboardingFormData');
     setError('');
@@ -170,6 +197,9 @@ const OnboardingForm = () => {
             >
               <div className="option-icon">{option.icon}</div>
               <div className="option-label">{option.label}</div>
+              {option.description && (
+                <div className="option-description">{option.description}</div>
+              )}
             </Card>
           );
         })}
@@ -181,7 +211,7 @@ const OnboardingForm = () => {
     <div className="onboarding-container">
       <header className="onboarding-header">
         <h1>Создай свою программу</h1>
-        <p>Ответьте на 3 вопроса, чтобы мы подобрали идеальный план</p>
+        <p>Ответьте на вопросы, чтобы мы подобрали идеальный план</p>
       </header>
 
       {hasRestoredData && isFormValid() && (
@@ -191,9 +221,19 @@ const OnboardingForm = () => {
       )}
 
       <form onSubmit={handleSubmit}>
-        {renderOptionGrid('Ваш уровень подготовки', 'difficulty', DIFFICULTIES)}
-        {renderOptionGrid('Ваша цель', 'goal', GOALS)}
-        {renderOptionGrid('Где будете тренироваться?', 'location', LOCATIONS)}
+        <div className="form-section-group">
+          <h2 className="group-title">Основная информация</h2>
+          {renderOptionGrid('Ваш пол (необязательно)', 'gender', GENDERS)}
+          {renderOptionGrid('Ваш уровень подготовки', 'difficulty', DIFFICULTIES)}
+          {renderOptionGrid('Ваша цель', 'goal', GOALS)}
+          {renderOptionGrid('Где будете тренироваться?', 'location', LOCATIONS)}
+        </div>
+
+        <div className="form-section-group">
+          <h2 className="group-title">Дополнительная информация (необязательно)</h2>
+          {renderOptionGrid('Ограничения по здоровью', 'health_restriction', HEALTH_RESTRICTIONS)}
+          {renderOptionGrid('Предпочтения в программе', 'program_preference', PROGRAM_PREFERENCES)}
+        </div>
 
         {error && <div className="error-message">{error}</div>}
 
