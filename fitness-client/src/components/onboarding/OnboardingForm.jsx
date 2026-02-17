@@ -23,7 +23,6 @@ const GOALS = [
   { id: 'weight_loss', label: 'Похудение', icon: '⚖️' },
   { id: 'muscle_gain', label: 'Набор массы', icon: '🏋️' },
   { id: 'endurance', label: 'Выносливость', icon: '🏃' },
-  { id: 'flexibility', label: 'Гибкость', icon: '🧘' },
 ];
 
 const LOCATIONS = [
